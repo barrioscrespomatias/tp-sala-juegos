@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "tp-sala-juegos-983f5"
+  },
+  "targets": {
+    "tp-sala-juegos-983f5": {
+      "hosting": {
+        "tp-sala-juegos": [
+          "tp-sala-juegos-983f5"
+        ]
+      }
+    }
   }
 }
