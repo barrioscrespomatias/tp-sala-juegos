@@ -5,20 +5,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { QuienSoyComponent } from './components/informativo/quien-soy/quien-soy.component';
-import { LoginComponent } from './modulos/login/login.component';
 import { JumbotronComponent } from './components/jumbotron/jumbotron.component';
+import { NavComponent } from './components/nav/nav.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { FirebaseAuthService } from './services/firebase-auth.service';
+import { FirebaseAuthService } from './services/angularfire/firebase-auth.service';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     QuienSoyComponent,
-    JumbotronComponent
+    JumbotronComponent,
+    NavComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

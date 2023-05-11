@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FirebaseAuthService } from '../../services/firebase-auth.service';
+import { FirebaseAuthService } from '../../services/angularfire/firebase-auth.service';
+import { FirestoreService } from '../../services/firestore/firestore.service';
 
 @Component({
   selector: 'app-login',
@@ -10,19 +11,19 @@ import { FirebaseAuthService } from '../../services/firebase-auth.service';
 export class LoginComponent {
   form!: FormGroup;
 
-  constructor(public firebaseService: FirebaseAuthService) {}
+  constructor(
+    public firebaseService: FirebaseAuthService,
+    private firestoreService: FirestoreService
+  ) {}
+
+  public isLogged: boolean = this.firebaseService.isLoggedIn;
+  
   ngOnInit(): void {
     this.form = new FormGroup({
       // usuario : new FormControl('',)
       email: new FormControl('', [Validators.pattern('^[a-zA-Z]+$')]),
       password: new FormControl('', [Validators.pattern('^[a-zA-Z]+$')]),
     });
-
-    // public id: string = '';
-    // public email: string = '';
-    // public displayName: string = '';
-    // public photoURL: string = '';
-    // public emailVerified: boolean = false;
   }
 
   get email() {
@@ -34,12 +35,16 @@ export class LoginComponent {
   }
 
   SignIn() {
-    console.log(this.email?.value)
-    console.log(this.password?.value)
     this.firebaseService.SignIn(this.email?.value, this.password?.value);
+    this.firestoreService.guardar(this.email?.value)
   }
 
   GoogleAuth() {
     this.firebaseService.GoogleAuth();
+  }
+
+  AccesoRapido() {
+    this.email?.setValue('matisfd@gmail.com');
+    this.password?.setValue('123456');
   }
 }

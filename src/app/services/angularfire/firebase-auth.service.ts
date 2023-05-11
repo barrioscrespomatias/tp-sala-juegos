@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Usuario } from '../clases/usuario/usuario';
+import { User } from '../../clases/user/user';
 import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import {
@@ -7,6 +7,8 @@ import {
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+// import { Swal } from '../../clases/swal/swal';
+import SweetAlert from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class FirebaseAuthService {
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public ngZone: NgZone, // NgZone service to remove outside scope warning
   ) {
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
@@ -46,30 +48,41 @@ export class FirebaseAuthService {
         });
       })
       .catch((error) => {
-        window.alert(error.message);
+        console.log(error)
+        // this.swal.SwalMensajeError('Error',error.message);
+        SweetAlert.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+        });
       });
   }
   // Sign up with email/password
   SignUp(email: string, password: string) {
-    alert("aca llega")
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
-        up and returns promise */
+        up and returns promise */        
         this.SendVerificationMail();
         this.SetUserData(result.user);
       })
       .catch((error) => {
-        window.alert(error.message);
+        // this.swal.SwalMensajeError('Error',error.message);
+        SweetAlert.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+        });
       });
   }
-  // Send email verfificaiton when new user sign up
+  // Send email verfificaiton when new user sign up  
   SendVerificationMail() {
     return this.afAuth.currentUser
+      //TODO enviar email para verificar cuenta
       .then((u: any) => u.sendEmailVerification())
       .then(() => {
-        this.router.navigate(['home']);
+        this.router.navigate(['']);
       });
   }
   // Reset Forggot password
@@ -77,16 +90,31 @@ export class FirebaseAuthService {
     return this.afAuth
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
+        // this.swal.SwalMensajeGenerico('Atencion','Se ha enviado un email para resetear el password');
+        SweetAlert.fire({
+          icon: 'warning',
+          title: 'Atencion!',
+          text: 'Se ha enviado un email para resetear el password',
+        });
       })
       .catch((error) => {
-        window.alert(error);
+        // this.swal.SwalMensajeError('Error',error);
+        SweetAlert.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error,
+        });
       });
   }
   // Returns true when user is looged in and email is verified
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user')!);
     return user !== null && user.emailVerified !== false ? true : false;
+  }
+
+  get userName(): string {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return user !== null ? user.email : ""
   }
   // Sign in with Google
   GoogleAuth() {
@@ -103,7 +131,12 @@ export class FirebaseAuthService {
         this.SetUserData(result.user);
       })
       .catch((error) => {
-        window.alert(error);
+        // this.swal.SwalMensajeError('Error',error);
+        SweetAlert.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error,
+        });
       });
   }
   /* Setting up user data when sign in with username/password, 
@@ -113,13 +146,14 @@ export class FirebaseAuthService {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
       `users/${user.uid}`
     );
-    const userData: Usuario = {
-      id: user.id,
+    const userData: User = {
+      uid: user.uid,
       email: user.email,
-      password: user.password
-      // displayName: user.displayName,
-      // photoURL: user.photoURL,
-      // emailVerified: user.emailVerified,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      //TODO verificar cuenta con email
+      emailVerified: user.emailVerified,
+      // emailVerified: true,
     };
     return userRef.set(userData, {
       merge: true,
@@ -129,7 +163,7 @@ export class FirebaseAuthService {
   SignOut() {
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user');
-      this.router.navigate(['login']);
+      this.router.navigate(['']);
     });
   }
 }

@@ -1,8 +1,5 @@
-export class Usuario {
-  public id: string = '';
-  public email: string = '';
+import { User } from "../user/user";
+
+export class Usuario extends User {
   public password: string = '';
-  // public displayName: string = '';
-  // public photoURL: string = '';
-  // public emailVerified: boolean = false;
 }
