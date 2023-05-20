@@ -15,6 +15,7 @@ const routes: Routes =
   // { path: 'quien-soy', component: QuienSoyComponent },
   { path: 'quien-soy', component: JumbotronComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+{ path: 'chat', loadChildren: () => import('./modulos/chat/chat.module').then(m => m.ChatModule) },
   
 
 ];
