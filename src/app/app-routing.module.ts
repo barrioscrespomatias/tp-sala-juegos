@@ -5,23 +5,45 @@ import { JumbotronComponent } from './components/jumbotron/jumbotron.component';
 // route guard
 import { AuthGuard } from './components/guard/auth.guard';
 import { HomeComponent } from './components/home/home.component';
-const routes: Routes = 
-[
+const routes: Routes = [
   // lazy loading
-  { path: '', loadChildren: () => import('./modulos/login/login.module').then(m => m.LoginModule) },
-  { path: 'registro', loadChildren: () => import('./modulos/registro/registro.module').then(m => m.RegistroModule) },
-  
+  {
+    path: '',
+    loadChildren: () =>
+      import('./modulos/login/login.module').then((m) => m.LoginModule),
+  },
+  {
+    path: 'registro',
+    loadChildren: () =>
+      import('./modulos/registro/registro.module').then(
+        (m) => m.RegistroModule
+      ),
+  },
+
   //normal loading
   // { path: 'quien-soy', component: QuienSoyComponent },
-  { path: 'quien-soy', component: JumbotronComponent, canActivate: [AuthGuard] },
+  {
+    path: 'quien-soy',
+    component: JumbotronComponent,
+    canActivate: [AuthGuard],
+  },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-{ path: 'chat', loadChildren: () => import('./modulos/chat/chat.module').then(m => m.ChatModule) },
-  
-
+  {
+    path: 'chat',
+    loadChildren: () =>
+      import('./modulos/chat/chat.module').then((m) => m.ChatModule),
+  },
+  {
+    path: 'ahorcado',
+    loadChildren: () =>
+      import('./modulos/ahorcado/ahorcado.module').then(
+        (m) => m.AhorcadoModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
