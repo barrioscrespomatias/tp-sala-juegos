@@ -1,0 +1,14 @@
+<div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="{{carta.imagen}}" alt="Card image cap">
+    <div class="card-body">
+      
+      <h5 class="card-title">Valor: {{carta.valor}}</h5>
+      <p class="card-text">Adivine si la proxima carta sera mayor o menor.</p>
+      <div class="row">
+        <button class="btn btn-primary col m-1" (click)="Jugar('MAYOR')">+</button>
+        <button class="btn btn-primary col m-1" (click)="Jugar('MENOR')">-</button>
+      </div>
+    </div>
+  </div>
+  <h1>Puntaje: {{puntaje}}</h1>
+  
