@@ -7,10 +7,11 @@ import { CartaComponent } from '../../components/carta/carta.component';
 import { HttpClientModule } from '@angular/common/http';
 
 
+
 @NgModule({
   declarations: [
     MayorMenorComponent,
-    CartaComponent
+    CartaComponent,
   ],
   imports: [
     CommonModule,

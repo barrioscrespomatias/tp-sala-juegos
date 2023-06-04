@@ -41,6 +41,7 @@ const routes: Routes = [
       ),
   },
   { path: 'mayorMenor', loadChildren: () => import('./modulos/mayor-menor/mayor-menor.module').then(m => m.MayorMenorModule) },
+  { path: 'trivia', loadChildren: () => import('./modulos/trivia/trivia.module').then(m => m.TriviaModule) },
 ];
 
 @NgModule({
