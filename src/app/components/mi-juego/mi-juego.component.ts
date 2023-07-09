@@ -57,20 +57,17 @@ export class MiJuegoComponent {
   }
 
   makeGuess(row: number, col: number) {
-    if (this.board[row][col] === "B") {
-      this.board[row][col] = "X"; // "X" representa un golpe exitoso
-      this.numGuesses++;
-
-      if(this.numGuesses == 20)
-      {
-        this.sweetAlert.MensajePerdiste('Buuuhh... llegaste al maximo de intentos...');
-        this.numGuesses = 0;
-        this.ReloadCurrentRoute();
-      }
-
-    } else if (this.board[row][col] === "X") {
+    if (this.board[row][col] === "B") 
+    {
+      this.board[row][col] = "X"; // "X" representa un golpe exitoso     
+    } 
+    else if (this.board[row][col] === "X") 
+    {
       this.sweetAlert.MensajeWarning('Ya has encontrado un barco en esa posición!')
-    } else {
+    } 
+    else 
+    {
+      this.board[row][col] = "-";
       this.numGuesses++;
 
       if(this.numGuesses == 20)

@@ -9,7 +9,7 @@
 <div class="board">
     <div *ngFor="let row of board; let i = index" class="row">
       <div *ngFor="let cell of row; let j = index" class="cell" (click)="makeGuess(i, j)">
-        {{ cell === 'X' ? 'X' : (cell === 'B' ? ' ' : '') }}
+        {{ cell === 'X' ? 'X' : (cell === 'B' ? ' ' : (cell === '-' ? '-' : '')) }}
       </div>
     </div>
   </div>
