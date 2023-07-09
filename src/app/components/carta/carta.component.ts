@@ -3,7 +3,9 @@ import { Subscription, switchMap } from 'rxjs';
 import { Carta } from 'src/app/clases/carta/carta';
 import { DeckID } from 'src/app/interfaces/deckId';
 import { DrawCard } from 'src/app/interfaces/drawCard';
+import { FirebaseAuthService } from 'src/app/services/angularfire/firebase-auth.service';
 import { RestdeckofcardsService } from 'src/app/services/restdeckofcards/restdeckofcards.service';
+import { SweetAlertService } from 'src/app/services/sweet-alert/sweet-alert.service';
 const CONST_MAYOR = 'MAYOR';
 const CONST_MENOR = 'MENOR';
 const CONST_IGUAL = 'IGUAL'
@@ -14,7 +16,17 @@ const CONST_IGUAL = 'IGUAL'
   styleUrls: ['./carta.component.css'],
 })
 export class CartaComponent {
-  constructor(private httpService: RestdeckofcardsService) {}
+  constructor(private httpService: RestdeckofcardsService,
+              private sweetAlert: SweetAlertService,
+              private firebaseService: FirebaseAuthService,
+              ) {this.checkLoggedIn();}
+
+  public isLogged: boolean = false;
+
+  async checkLoggedIn() {
+    this.isLogged = await this.firebaseService.isLoggedIn();
+    console.log(this.isLogged)
+  }
 
   suscripcion!: Subscription;
   deck!: any;
@@ -95,20 +107,33 @@ export class CartaComponent {
     }
 
     //Funcionalidad mayor o menor.
-    this.valorAnterior = valoresEnMemoria[1].valor;
+    if(valoresEnMemoria[1] == undefined){
+      valoresEnMemoria[1].valor = 0
+    }
+    else
+      this.valorAnterior = valoresEnMemoria[1].valor;
+
     this.valorActual = valor;
     this.resultado = this.valorActual > this.valorAnterior ?  CONST_MAYOR : this.valorActual == this.valorAnterior ? CONST_IGUAL : CONST_MENOR;
 
 
     if(accion == CONST_MAYOR && this.resultado == CONST_MAYOR){
-      this.puntaje ++;    
+      this.puntaje++; 
+      if(this.puntaje == 5){
+        this.sweetAlert.MensajeGanaste(); 
+        this.puntaje = 0;
+      }
     }
     else if(accion == CONST_MENOR && this.resultado == CONST_MENOR){
       this.puntaje++; 
+      if(this.puntaje == 5){
+        this.sweetAlert.MensajeGanaste(); 
+        this.puntaje = 0;
+      }
     }
     else if((accion == CONST_MENOR && this.resultado != CONST_MENOR || accion == CONST_MAYOR && this.resultado != CONST_MAYOR) && this.resultado != CONST_IGUAL){
+      this.sweetAlert.MensajePerdiste('La suerte no te acompañó. Tu puntaje fue: ' + this.puntaje)
       this.puntaje = 0
-      alert('Perdiste...')
     }
 
     //utilizo localstorage para comparar valores.

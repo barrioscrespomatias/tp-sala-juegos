@@ -1,12 +1,12 @@
 export enum TriviaCategory {
-  Music = 1,
-  Sport_and_leisure,
-  film_and_tv,
-  arts_and_literature,
-  history,
-  society_and_culture,
-  science,
-  geography,
-  food_and_drink,
-  general_knowledge,
+  General_Knowledge = "CULTURA GENERAL",//9
+  Films = "PELICULAS",//11,
+  Music = "MUSICA",//12,
+  Video_Games = "VIDEO JUEGOS",//15,
+  Computers = "COMPUTADORAS",//18,
+  Sports = "DEPORTES",//21,
+  Geography = "GEOGRAFIA",//22,
+  History = "HISTORIA",//23,
+  Animals = "ANIMALES",//27,
+  Vehicles = "VEHICULOS",//28,
 }

@@ -1,0 +1,15 @@
+<app-nav *ngIf="isLogged" ></app-nav>
+
+<div class="get-in-touch">
+  <div class="row">
+      <h2 class="subtitle">Intentos restantes: {{20 - numGuesses}}</h2>      
+  </div>
+</div>
+
+<div class="board">
+    <div *ngFor="let row of board; let i = index" class="row">
+      <div *ngFor="let cell of row; let j = index" class="cell" (click)="makeGuess(i, j)">
+        {{ cell === 'X' ? 'X' : (cell === 'B' ? ' ' : '') }}
+      </div>
+    </div>
+  </div>

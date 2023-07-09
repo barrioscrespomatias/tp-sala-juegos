@@ -1,0 +1,3 @@
+<app-nav *ngIf="isLogged" ></app-nav>
+<app-roulettewheel (onEnviarItemHaciaPadre)="ObtenerElemento($event)"></app-roulettewheel>
+<app-pregunta [idPregunta]="valorPregunta"></app-pregunta>

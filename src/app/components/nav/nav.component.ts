@@ -9,12 +9,13 @@ import { FirebaseAuthService } from '../../services/angularfire/firebase-auth.se
 export class NavComponent {
   constructor(public firebaseService: FirebaseAuthService) {}
 
-  public isLogged: boolean = this.firebaseService.isLoggedIn;
+  public isLogged: boolean = false;
+  async checkLoggedIn() {
+    this.isLogged = await this.firebaseService.isLoggedIn();
+  }
   public userName: string = this.firebaseService.userName;
 
   SignOut() {
     this.firebaseService.SignOut();  
-  }
-
- 
+  } 
 }

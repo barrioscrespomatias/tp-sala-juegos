@@ -16,6 +16,19 @@ import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { HomeComponent } from './components/home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChatComponent } from './components/chat/chat.component';
+import { RandomwordComponent } from './components/randomword/randomword/randomword.component';
+import { KeyboardComponent } from './components/keyboard/keyboard/keyboard.component';
+import { CapturarLetraTecladoDirective } from 'src/app/directives/capturar-letra-teclado.directive';
+import { AhorcadoComponent } from './components/ahorcado/ahorcado.component';
+import { CartaComponent } from './components/carta/carta.component';
+import { TriviaComponent } from './components/trivia/trivia.component';
+import { RoulettewheelComponent } from './components/roulettewheel/roulettewheel/roulettewheel.component';
+import { PreguntaComponent } from './components/pregunta/pregunta/pregunta.component';
+import { RandomOrderDirective } from 'src/app/directive/random-order.directive';
+import { MiJuegoComponent } from './components/mi-juego/mi-juego.component';
+import { RemoverCaracteresEspecialesPipe } from './pipes/remover-caracteres-especiales.pipe';
+
 
 @NgModule({
   declarations: [
@@ -24,6 +37,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     JumbotronComponent,
     NavComponent,
     HomeComponent,
+    ChatComponent,
+    KeyboardComponent,
+    RandomwordComponent,
+    CapturarLetraTecladoDirective,
+    AhorcadoComponent,
+    CartaComponent,
+    TriviaComponent,
+    RoulettewheelComponent,
+    PreguntaComponent,
+    RandomOrderDirective,
+    MiJuegoComponent,
+    RemoverCaracteresEspecialesPipe
   ],
   imports: [
     BrowserModule,

@@ -9,7 +9,7 @@ export class TriviaPreguntasService {
 
   constructor(private http : HttpClient) { }
 
-  Get(){
-    return this.http.get<Trivia>('https://the-trivia-api.com/api/questions');
+  Get(catetgory: number){
+    return this.http.get<Trivia>(`https://opentdb.com/api.php?amount=1&category=${catetgory}&difficulty=easy&type=multiple`);
   }
 }

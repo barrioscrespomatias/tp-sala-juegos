@@ -1,7 +1,9 @@
-<div class="card" style="width: 18rem;">
+<app-nav *ngIf="isLogged" ></app-nav>
+<div class="d-flex justify-content-center align-self-center mt-5">
+  <div class="card border-0" style="width: 18rem;" >
     <img class="card-img-top" src="{{carta.imagen}}" alt="Card image cap">
     <div class="card-body">
-      
+
       <h5 class="card-title">Valor: {{carta.valor}}</h5>
       <p class="card-text">Adivine si la proxima carta sera mayor o menor.</p>
       <div class="row">
@@ -10,5 +12,4 @@
       </div>
     </div>
   </div>
-  <h1>Puntaje: {{puntaje}}</h1>
-  
+</div>

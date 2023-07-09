@@ -16,7 +16,10 @@ export class LoginComponent {
     private firestoreService: FirestoreService
   ) {}
 
-  public isLogged: boolean = this.firebaseService.isLoggedIn;
+  public isLogged: boolean = false;
+  async checkLoggedIn() {
+    this.isLogged = await this.firebaseService.isLoggedIn();
+  }
   
   ngOnInit(): void {
     this.form = new FormGroup({

@@ -14,22 +14,62 @@ export class RegistroComponent {
   ngOnInit(): void {
     this.form = new FormGroup({
       // usuario : new FormControl('',)
-      email: new FormControl('', [Validators.pattern('^[a-zA-Z]+$')]),
-      password: new FormControl('', [Validators.pattern('^[a-zA-Z]+$')]),
+      // nombre: new FormControl('', [
+      //   Validators.required, 
+      //   Validators.minLength(2),
+      //   Validators.maxLength(30),
+      //   Validators.pattern('[a-zA-Z ]*')]),
+      // apellido: new FormControl('', [
+      //   Validators.required, 
+      //   Validators.minLength(2),
+      //   Validators.maxLength(30),
+      //   Validators.pattern('[a-zA-Z ]*')]),
+        mail: new FormControl('', [Validators.required, Validators.email]),
+        contrasena: new FormControl('', [Validators.pattern('^[a-zA-Z]+$'), Validators.required]),
     });
   }
 
-  public isLogged: boolean = this.firebaseService.isLoggedIn;
-
-  get email() {
-    return this.form.get('email');
+  public isLogged: boolean = false;
+  async checkLoggedIn() {
+    this.isLogged = await this.firebaseService.isLoggedIn();
   }
 
-  get password() {
-    return this.form.get('password');
+  // get nombre() {
+  //   return this.form.get('nombre');
+  // }
+
+  // get apellido() {
+  //   return this.form.get('apellido');
+  // }
+
+  get email() {
+    return this.form.get('mail');
+  }
+
+  get contrasena() {
+    return this.form.get('contrasena');
   }
 
   SignUp() {
-    this.firebaseService.SignUp(this.email?.value, this.password?.value);
+    this.firebaseService.SignUp(this.email?.value, this.contrasena?.value);
+  }
+
+  public FormularioConErrores(): boolean {
+
+    console.log(this.form.controls);
+
+    // Recorrer los controles del formulario
+    for (const controlName in this.form.controls) {
+      if (this.form.controls.hasOwnProperty(controlName)) {
+        const control = this.form.controls[controlName];
+        
+        // Verificar si el control tiene errores
+        if (control.errors) {
+          console.log(`Errores en ${controlName}:`, control.errors);
+        }
+      }
+    }
+
+    return this.form.invalid;
   }
 }

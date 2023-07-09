@@ -6,10 +6,11 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription, map } from 'rxjs';
 import { RandomWord } from 'src/app/interfaces/randomWord';
 import { RestspanishrandomwordService } from 'src/app/services/restspanishrandomword/restspanishrandomword.service';
+import { SweetAlertService } from 'src/app/services/sweet-alert/sweet-alert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-randomword',
@@ -17,67 +18,76 @@ import { RestspanishrandomwordService } from 'src/app/services/restspanishrandom
   styleUrls: ['./randomword.component.css'],
 })
 export class RandomwordComponent implements OnChanges {
-  constructor(private httpService: RestspanishrandomwordService) {}
+  constructor(private httpService: RestspanishrandomwordService,
+              private sweetAlert: SweetAlertService,
+              public router: Router,  
+              ) {}
 
   //#region Properties
 
   arrayChar!: string[];
   arrayLetrasCorrectas: Array<string> = new Array<string>();
   cantidadErroresMaximos: number = 10;
-  cantidadActualErrores: number = 0;
+  cantidadActualErrores: number = -1;
   valorActualLetra: string = '';
-  // form!: FormGroup;
   indicesLetraIngresada: number[] = [];
   ramdomWord!: string;
   suscripcion!: Subscription;
-
-  //TODO auxiliar mientras no funcione el servicio randomWord
-  auxiliarWord: string = 'PRIMERA';
-
   @Output() onEnviarItemHaciaPadre = new EventEmitter<RandomWord>();
   @Input() letraDesdeTeclado!: string;
+  otraPalabra:string ='';
+
+  usuariosSubscription:any;
 
   //#endregion
 
   //#region Hooks
 
-  ngOnInit() {
-    // this.form = new FormGroup({
-    //   // usuario : new FormControl('',)
-    //   letra: new FormControl('', [Validators.pattern('^[a-zA-Z]+$')]),
-    // });
+  async ngOnInit() {
+    this.suscripcion = this.httpService
+      .Get()
+      .subscribe((word) => this.GenerarTemplate(word));
 
-    // this.suscripcion = this.httpService
-    //   .Get()
-    //   .subscribe((word) => this.GenerarTemplate(word));
 
-    this.GenerarTemplate(this.auxiliarWord);
+      this.usuariosSubscription = (
+        await this.httpService.Get()
+      ).subscribe((palabra) => {
+        this.otraPalabra = palabra
+      }); 
+
+      // this.otraPalabra =  await this.httpService
+      // .Get()
+
+      // await this.usuarioService.getProfesional(this.email).then((usuario: any) => {
+      //   this.usuario = usuario;        
+      // });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.valorActualLetra = changes['letraDesdeTeclado'].currentValue;
 
-    this.ObtenerTodosLosIndices(this.valorActualLetra, this.auxiliarWord);
-
-    console.log(this.indicesLetraIngresada)
+    if(this.ramdomWord){
+      this.ObtenerTodosLosIndices(this.valorActualLetra, this.ramdomWord);
+    }
 
     if (this.indicesLetraIngresada.length > 0 && this.indicesLetraIngresada[0] != -1)    
       this.SetearLetraIngresadaEnArrayLetrasCorrectas(this.valorActualLetra, this.indicesLetraIngresada);
     else if (this.indicesLetraIngresada.length == 0)
-    this.cantidadActualErrores++;    
+      this.cantidadActualErrores++;    
+
+    // if(this.arrayLetrasCorrectas)
+    
+    if (!this.arrayLetrasCorrectas.includes("_") && this.arrayLetrasCorrectas.length > 0){
+      // this.sweetAlert.MensajeGanaste('Muy bien jugado!! La palabra era: '+ this.ramdomWord.toUpperCase())
+      this.sweetAlert.MensajeGanaste();
+      this.ReloadCurrentRoute();
+    }
   }
 
   ngOnDestroy() {
     this.suscripcion.unsubscribe();
+    this.usuariosSubscription.unsubscribe();
   }
-
-  //#endregion
-
-  //#region Getters
-
-  // get letra() {
-  //   return this.form.get('letra');
-  // }
 
   //#endregion
 
@@ -88,23 +98,61 @@ export class RandomwordComponent implements OnChanges {
   }
 
   GenerarTemplate(word: string) {
+    if(word.length > 0){
+      
+    // console.log('palabra : '+ word)
+    
     this.ramdomWord = word;
 
-    //TODO no tiene uso
-    //divide la palabra en un array con cada caracter.
-    // this.arrayChar = word[0].split('');
+    // this.ramdomWord[0][0] = 'a';
+    
+    // console.log('primera letra: ' + word[0][0])
 
-    //TODO mientras NO sea un array quito el word[0]
-    this.arrayChar = word.split('');
+    var firstCharacter = word[0][0];
+
+    if (firstCharacter == firstCharacter.toUpperCase() || word[0].includes(' ') || word[0].includes('.' )) 
+    {
+      this.ReloadCurrentRoute();
+    }
+
+    console.log(word[0])
+    
+    
+
+
+    // let randomWordArray: string[] = word[0].split('');
+    
+    // randomWordArray[0] = this.ramdomWord[0][0].toLocaleLowerCase();
+    
+    // this.ramdomWord = randomWordArray.join('');
+
+    // console.log('formateada primera letra ' + this.ramdomWord)
+
+
+
+
+    this.arrayChar = word[0].toLocaleLowerCase().split('');
 
     //Setea el array de letras correctas con '_'
-    // for (let i = 1; i <= word[0].length; i++) {
-
-    //TODO mientras NO sea un array quito el word[0]
-    for (let i = 1; i <= word.length; i++) {
-      this.arrayLetrasCorrectas.push('_');
-    }
+      for (let i = 1; i <= word[0].length; i++) {
+        this.arrayLetrasCorrectas.push('_');
+      }
+    }    
   }
+
+
+  
+  
+  ReloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
+  }
+  
+  
+  
+  
 
   /** ObtenerTodosLosIndices
    *
@@ -114,20 +162,14 @@ export class RandomwordComponent implements OnChanges {
    */
 
   ObtenerTodosLosIndices(letra: string, randomWord: string) {
-    this.indicesLetraIngresada = [];
-    //TODO mientras NO sea un array quito el word[0]
-    // for (let index = 0; index < randomWord[0].length; index++) {
-    if (this.LetraNoExisteEnArrayLetrasCorrectas(letra)) {
-      for (let index = 0; index < randomWord.length; index++) {
-        //TODO mientras NO sea un array quito el word[0]
-        if (randomWord[index] == letra) {
-          this.indicesLetraIngresada.push(index);
-        // } else {
-          //No existe ni en arrayletrasCorrectas
-          //No existe en randomWord
+    this.indicesLetraIngresada = [];    
+    
+    if (!this.LetraExisteEnArrayLetrasCorrectas(letra)) {
+      for (let index = 0; index < randomWord[0].length; index++) {
+        var letraRandomWordSinAcento = this.QuitarAcento(randomWord[0][index]);  
 
-          //Esto suma errores
-          // this.cantidadActualErrores++;
+        if (letraRandomWordSinAcento == letra.toLowerCase()) {
+          this.indicesLetraIngresada.push(index);
         }
       }
     } 
@@ -148,21 +190,38 @@ export class RandomwordComponent implements OnChanges {
     }
   }
 
-  LetraNoExisteEnArrayLetrasCorrectas(letra: string) {
-    // var letraExistente = false;
-    // for (let index = 0; index < this.arrayLetrasCorrectas.length; index++) {
-    //   //TODO mientras NO sea un array quito el word[0]
-    //   if (this.arrayLetrasCorrectas[index] == letra) {
-    //     alert(this.arrayLetrasCorrectas[index])
-    //     // this.indicesLetraIngresada.push(index);
-    //     letraExistente = true;
-    //     break;
-    //   }
-    // }
-    // return letraExistente;
-    // console.log(letraExistente)
+  LetraExisteEnArrayLetrasCorrectas(letra: string) {
+    var letraExistente = false;
+    for (let index = 0; index < this.arrayLetrasCorrectas.length; index++) {
+      if (this.arrayLetrasCorrectas[index].toLocaleLowerCase() == letra) {
+        letraExistente = true;
+        break;
+      }
+    }
+    return letraExistente;
+  }
 
-    return this.arrayLetrasCorrectas.indexOf(letra)! == -1;
+  QuitarAcento(letra:string){
+    var letraSinAcento = letra;
+    switch(letra)
+    {
+      case 'á':
+        letraSinAcento = 'a';
+        break;
+      case 'é':
+        letraSinAcento = 'e';
+        break;
+      case 'í':
+        letraSinAcento = 'i';
+        break;
+      case 'ó':
+        letraSinAcento = 'o';
+        break;
+      case 'ú':
+        letraSinAcento = 'u';
+        break;    
+    }
+    return letraSinAcento;
   }
   //#endregion
 }

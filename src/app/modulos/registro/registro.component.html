@@ -1,4 +1,4 @@
-<form class="m-4" [formGroup] = "form" *ngIf="!isLogged">
+<!-- <form class="m-4" [formGroup] = "form" *ngIf="!isLogged">
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="inputEmail4">Email</label>
@@ -10,4 +10,94 @@
       </div>
     </div>
     <button class="w-50 btn btn-lg btn-primary mb-3 mt-3" type="submit" (click)="SignUp()">Registrar</button>
-  </form>
+  </form> -->
+
+
+  <div class="row" *ngIf="!isLogged">
+    <section class="get-in-touch">
+      <div class="row">
+        <h1 class="title">Registro</h1>
+      </div>
+      <div class="row mt-3 w-100">
+
+      
+       <form class="contact-form" [formGroup]="form">
+          <!-- <div class="row">
+             <div class="form-field col-md-6">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" formControlName="nombre" type="text" class="input-text js-input" required>
+                <div *ngIf="form.get('nombre')?.invalid && (form.get('nombre')?.dirty || form.get('nombre')?.touched)">
+                   <div *ngIf="form.get('nombre')?.errors?.['required']" class="error-message">
+                     El campo es requerido.
+                   </div>
+                   <div *ngIf="form.get('nombre')?.errors?.['minlength']" class="error-message">
+                      El campo debe tener al menos {{form.get('nombre')?.errors?.['minlength'].requiredLength}} caracteres.
+                    </div>
+                    <div *ngIf="form.get('nombre')?.errors?.['maxlength']" class="error-message">
+                      El campo debe tener como maximo {{form.get('nombre')?.errors?.['maxlength'].requiredLength}} caracteres.
+                    </div>
+                    <span *ngIf="form.get('nombre')?.errors?.['pattern']">El campo solo puede contener letras y caracteres especiales.</span>
+                 </div>
+             </div>
+             <div class="form-field col-md-6">
+                <label for="apellido">Apellido</label>
+                <input id="apellido" formControlName="apellido" type="text" class="input-text js-input" required>
+                <div *ngIf="form.get('apellido')?.invalid && (form.get('apellido')?.dirty || form.get('apellido')?.touched)">
+                   <div *ngIf="form.get('apellido')?.errors?.['required']" class="error-message">
+                     El campo es requerido.
+                   </div>
+                   <div *ngIf="form.get('apellido')?.errors?.['minlength']" class="error-message">
+                      El campo debe tener al menos {{form.get('apellido')?.errors?.['minlength'].requiredLength}} caracteres.
+                    </div>
+                    <div *ngIf="form.get('apellido')?.errors?.['maxlength']" class="error-message">
+                      El campo debe tener como maximo {{form.get('apellido')?.errors?.['maxlength'].requiredLength}} caracteres.
+                    </div>
+                    <span *ngIf="form.get('apellido')?.errors?.['pattern']">El campo solo puede contener letras y caracteres especiales.</span>
+                 </div>
+             </div>
+          </div> -->
+
+          <div class="row">
+             <div class="form-field col-md-6">
+                <label for="mail">E-Mail</label>
+                <input id="mail" formControlName="mail" type="email" class="input-text js-input" required>
+                
+                <div *ngIf="form.get('mail')?.invalid && (form.get('mail')?.dirty || form.get('mail')?.touched)">
+                   <div *ngIf="form.get('mail')?.errors?.['required']" class="error-message">
+                     El campo es requerido.
+                   </div>
+                   <div *ngIf="form.get('mail')?.errors?.['minlength']" class="error-message">
+                      El campo debe tener al menos {{form.get('mail')?.errors?.['minlength'].requiredLength}} caracteres.
+                    </div>
+                    <div *ngIf="form.get('mail')?.errors?.['maxlength']" class="error-message">
+                      El campo debe tener como maximo {{form.get('mail')?.errors?.['maxlength'].requiredLength}} caracteres.
+                    </div>
+                 </div> 
+             </div>
+             <div class="form-field col-md-6">
+              <label for="contrasena">Contraseña</label>
+              <input id="contrasena" formControlName="contrasena" type="password" class="input-text js-input" required>
+
+              <div *ngIf="form.get('contrasena')?.invalid && (form.get('contrasena')?.dirty || form.get('contrasena')?.touched)">
+                 <div *ngIf="form.get('contrasena')?.errors?.['required']" class="error-message">
+                    El campo es requerido.
+                 </div>
+                 <div *ngIf="form.get('contrasena')?.errors?.['minlength']" class="error-message">
+                    El campo debe tener al menos {{form.get('contrasena')?.errors?.['minlength'].requiredLength}} caracteres.
+                 </div>
+                 <div *ngIf="form.get('contrasena')?.errors?.['maxlength']" class="error-message">
+                    El campo debe tener como maximo {{form.get('contrasena')?.errors?.['maxlength'].requiredLength}} caracteres.
+                 </div>
+                 <span *ngIf="form.get('contrasena')?.errors?.['pattern']">El campo solo puede contener letras y caracteres especiales.</span>
+              </div> 
+           </div>
+          </div>        
+ 
+          <div class="form-field col-sm-12">
+            <input class="submit-btn" *ngIf="!FormularioConErrores()" (click)="SignUp()" value="Registrarme">
+          </div>
+ 
+       </form>
+      </div>
+    </section>
+ </div>

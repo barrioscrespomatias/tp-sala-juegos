@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { QuienSoyComponent } from './components/informativo/quien-soy/quien-soy.component';
 import { JumbotronComponent } from './components/jumbotron/jumbotron.component';
 // route guard
 import { AuthGuard } from './components/guard/auth.guard';
 import { HomeComponent } from './components/home/home.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { AhorcadoComponent } from './components/ahorcado/ahorcado.component';
+import { CartaComponent } from './components/carta/carta.component';
+import { TriviaComponent } from './components/trivia/trivia.component';
+import { MiJuegoComponent } from './components/mi-juego/mi-juego.component';
 const routes: Routes = [
   // lazy loading
   {
@@ -21,27 +25,18 @@ const routes: Routes = [
   },
 
   //normal loading
-  // { path: 'quien-soy', component: QuienSoyComponent },
+
   {
     path: 'quien-soy',
     component: JumbotronComponent,
     canActivate: [AuthGuard],
   },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  {
-    path: 'chat',
-    loadChildren: () =>
-      import('./modulos/chat/chat.module').then((m) => m.ChatModule),
-  },
-  {
-    path: 'ahorcado',
-    loadChildren: () =>
-      import('./modulos/ahorcado/ahorcado.module').then(
-        (m) => m.AhorcadoModule
-      ),
-  },
-  { path: 'mayorMenor', loadChildren: () => import('./modulos/mayor-menor/mayor-menor.module').then(m => m.MayorMenorModule) },
-  { path: 'trivia', loadChildren: () => import('./modulos/trivia/trivia.module').then(m => m.TriviaModule) },
+  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
+  { path: 'ahorcado', component: AhorcadoComponent, canActivate: [AuthGuard] },
+  { path: 'mayorMenor', component: CartaComponent, canActivate: [AuthGuard] },
+  { path: 'trivia', component: TriviaComponent, canActivate: [AuthGuard] },
+  { path: 'batallaNaval', component: MiJuegoComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

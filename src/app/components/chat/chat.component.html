@@ -1,0 +1,15 @@
+<app-nav *ngIf="isLogged" ></app-nav>
+<form novalidate *ngIf="form" [formGroup]="form" class="m-5">
+    <div class="chat-box">
+        <div class="messages">
+            <div class="msg m-2" *ngFor="let item of mensajes">{{item.mensaje}} - {{item.usuarioEmisor}} -
+                {{item.fecha}}</div>
+        </div>
+        <div class="input-holder">
+            <div class="control">
+                <input class="chat-input" id="mensaje" formControlName="mensaje" type="text" value="" required>
+                <button class="chat-btn" (click)="CrearMensaje()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</form>

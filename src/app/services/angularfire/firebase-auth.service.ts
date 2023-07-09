@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { User } from '../../clases/user/user';
 import * as auth from 'firebase/auth';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { SweetAlertService } from 'src/app/services/sweet-alert/sweet-alert.service';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
@@ -21,6 +22,7 @@ export class FirebaseAuthService {
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning
+    private sweetAlert: SweetAlertService,
   ) {
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
@@ -68,11 +70,13 @@ export class FirebaseAuthService {
         this.SetUserData(result.user);
       })
       .catch((error) => {
+
+        if(error.message == 'Firebase: Error (auth/email-already-in-use).')
         // this.swal.SwalMensajeError('Error',error.message);
         SweetAlert.fire({
           icon: 'error',
           title: 'Error',
-          text: error.message,
+          text: 'El dirección de email ya se encuentra registrada.',
         });
       });
   }
@@ -107,9 +111,37 @@ export class FirebaseAuthService {
       });
   }
   // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null && user.emailVerified !== false ? true : false;
+  async isLoggedIn(): Promise<boolean> {
+    const logueado = await this.IsLogued();
+    return logueado == true;
+  }
+
+    IsLogued() { 
+    return new Promise<boolean>((resolve, reject) => {
+      this.afAuth.onAuthStateChanged((user) => {
+        if (user) {          
+          // Usuario logueado
+          resolve(true);
+        } else {
+          // Usuario no logueado
+          resolve(false);
+        }
+      });
+    });
+  }
+
+  GetUserLogueado() { 
+    return new Promise<any>((resolve, reject) => {
+      this.afAuth.onAuthStateChanged((user) => {
+        if (user) {
+          // Usuario logueado con correo electrónico
+          resolve(user);
+        } else {
+          // Usuario no logueado o sin correo electrónico
+          resolve("");
+        }
+      });
+    });
   }
 
   get userName(): string {
@@ -166,4 +198,6 @@ export class FirebaseAuthService {
       this.router.navigate(['']);
     });
   }
+
+
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { TriviaCategory } from 'src/app/enum/trivia-category';
 
 declare var ruleta: any;
 
@@ -9,7 +10,76 @@ declare var ruleta: any;
 })
 export class RoulettewheelComponent implements OnInit {
 
-  private options = ["Historia", "Geografia", "Deportes"];
+  //Aqui tengo el output
+  @Output() onEnviarItemHaciaPadre = new EventEmitter<number>();
+
+  //Metodo que al ser llamado emite el idPregunta.
+  enviarItemHaciaPadre(idPregunta: number){
+    this.onEnviarItemHaciaPadre.emit(idPregunta)
+  }
+
+  private stopRotateWheel() {
+    clearTimeout(this.spinTimeout);
+    const degrees = this.startAngle * 180 / Math.PI + 90;
+    const arcd = this.arc * 180 / Math.PI;
+    const index = Math.floor((360 - degrees % 360) / arcd);
+    this.ctx.save();
+    this.ctx.font = 'bold 30px Helvetica, Arial';
+    const text = this.options[index];
+    this.ctx.fillText(text, 250 - this.ctx.measureText(text).width / 2, 250 + 10);
+    this.ctx.restore();
+  
+    this.selectedCategory = this.options[index];
+
+    var idPregunta = this.ObtenerIdPregunta(this.selectedCategory);
+
+    //Activo el metodo para emitir el valor hacia el padre.
+    this.enviarItemHaciaPadre(idPregunta)
+  }
+
+  private ObtenerIdPregunta(categoriaTrivia:TriviaCategory): number {
+    var idPregunta:number = 0;
+
+    switch(categoriaTrivia)
+    {
+        case TriviaCategory.General_Knowledge:
+          idPregunta = 9
+          break;
+        case TriviaCategory.Films:
+          idPregunta = 11
+          break;
+        case TriviaCategory.Music:
+            idPregunta = 12
+            break;
+        case TriviaCategory.Video_Games:
+          idPregunta = 15
+          break;
+        case TriviaCategory.Computers:
+          idPregunta = 18
+          break;
+        case TriviaCategory.Sports:
+          idPregunta = 21
+          break;
+        case TriviaCategory.Geography:
+          idPregunta = 22
+          break;
+        case TriviaCategory.History:
+          idPregunta = 23
+          break;
+        case TriviaCategory.Animals:
+          idPregunta = 27
+          break;
+        case TriviaCategory.Vehicles:
+          idPregunta = 28
+          break;
+    }
+
+    return idPregunta;
+  }
+
+  private options = [TriviaCategory.Animals, TriviaCategory.Computers, TriviaCategory.Films, TriviaCategory.General_Knowledge,
+  TriviaCategory.Geography, TriviaCategory.Geography, TriviaCategory.History, TriviaCategory.Sports, TriviaCategory.Music,
+  TriviaCategory.Sports, TriviaCategory.Vehicles, TriviaCategory.Video_Games];
 
   private startAngle = 0;
   private arc = Math.PI / (this.options.length / 2);
@@ -20,6 +90,8 @@ export class RoulettewheelComponent implements OnInit {
   private spinTimeTotal = 0;
 
   private ctx!: CanvasRenderingContext2D;
+
+  selectedCategory: TriviaCategory | undefined;
 
   ngOnInit() {
     this.drawRouletteWheel();
@@ -122,21 +194,11 @@ export class RoulettewheelComponent implements OnInit {
     this.spinTimeout = setTimeout(() => this.rotateWheel(), 30);
   }
 
-  private stopRotateWheel() {
-    clearTimeout(this.spinTimeout);
-    const degrees = this.startAngle * 180 / Math.PI + 90;
-    const arcd = this.arc * 180 / Math.PI;
-    const index = Math.floor((360 - degrees % 360) / arcd);
-    this.ctx.save();
-    this.ctx.font = 'bold 30px Helvetica, Arial';
-    const text = this.options[index];
-    this.ctx.fillText(text, 250 - this.ctx.measureText(text).width / 2, 250 + 10);
-    this.ctx.restore();
-  }
-
   private easeOut(t: number, b: number, c: number, d: number): number {
     const ts = (t /= d) * t;
     const tc = ts * t;
     return b + c * (tc + -3 * ts + 3 * t);
   }
+
+  
 }

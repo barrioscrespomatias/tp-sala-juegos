@@ -1,0 +1,3 @@
+<app-nav *ngIf="isLogged" ></app-nav>
+<app-randomword [letraDesdeTeclado]="letra"></app-randomword>
+<app-keyboard (onEnviarItemHaciaPadre)="recibirItemDeHijo($event)"></app-keyboard>

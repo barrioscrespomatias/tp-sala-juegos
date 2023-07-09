@@ -7,6 +7,11 @@ import { FirebaseAuthService } from 'src/app/services/angularfire/firebase-auth.
   styleUrls: ['./jumbotron.component.css']
 })
 export class JumbotronComponent {
-  constructor(public firebaseService: FirebaseAuthService) {}
-  public isLogged: boolean = this.firebaseService.isLoggedIn;
+  constructor(public firebaseService: FirebaseAuthService) {
+    this.checkLoggedIn()
+  }
+  public isLogged: boolean = false;
+  async checkLoggedIn() {
+    this.isLogged = await this.firebaseService.isLoggedIn();
+  }
 }

@@ -1,6 +1,20 @@
-<!-- <h1>{{pregunta?.category}}</h1> -->
+<div class="start" appRandomOrder>
+  <div class="card">
+    <p>{{pregunta?.results[0].question | removerCaracteresEspeciales}}</p>
 
-<div *ngFor="let pelicula of pregunta">
-    <h1>{{pelicula?.category}}</h1>
+    
+
+    <div class="row">
+      <button class="start opcion" (click)="OpcionIncorrecta()" [disabled]="!habilitarBotones">{{pregunta?.results[0].incorrect_answers[0]}}</button>
+      <button class="start opcion" (click)="OpcionIncorrecta()" [disabled]="!habilitarBotones">{{pregunta?.results[0].incorrect_answers[1]}}</button>
+    </div>
+
+    <div class="row">
+      <button class="start opcion" (click)="OpcionIncorrecta()" [disabled]="!habilitarBotones">{{pregunta?.results[0].incorrect_answers[2]}}</button>
+      <button class="start opcion" (click)="OpcionCorrecta()" [disabled]="!habilitarBotones">{{pregunta?.results[0].correct_answer}}</button>
+    </div>
+  </div>
 </div>
-
+<div class="play">
+  <div class="questions"></div>
+</div>
