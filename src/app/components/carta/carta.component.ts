@@ -106,12 +106,11 @@ export class CartaComponent {
       valoresEnMemoria.push(this.carta);
     }
 
-    //Funcionalidad mayor o menor.
-    if(valoresEnMemoria[1] == undefined){
-      valoresEnMemoria[1].valor = 0
-    }
-    else
+    if (valoresEnMemoria?.[1] == undefined) {
+      this.valorAnterior = 0;
+    } else {
       this.valorAnterior = valoresEnMemoria[1].valor;
+    }
 
     this.valorActual = valor;
     this.resultado = this.valorActual > this.valorAnterior ?  CONST_MAYOR : this.valorActual == this.valorAnterior ? CONST_IGUAL : CONST_MENOR;
